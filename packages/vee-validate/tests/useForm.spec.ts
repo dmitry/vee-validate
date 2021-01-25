@@ -62,6 +62,31 @@ describe('useForm()', () => {
     expect(errors[1]?.textContent).toBe('WRONG AGAIN');
   });
 
+  test('sets multiple error messages per field', async () => {
+    mountWithHoc({
+      setup() {
+        const { setErrors } = useForm();
+        const { errorMessage: err1 } = useField('field1', val => (val ? true : REQUIRED_MESSAGE));
+
+        return {
+          err1,
+          setErrors,
+        };
+      },
+      template: `
+      <span>{{ err1 }}</span>
+      <button @click="setErrors({ field1: ['WRONG', 'WRONG AGAIN'], field3: 'huh' })">Set Field Error</button>
+    `,
+    });
+
+    const errors = document.querySelectorAll('span');
+    await flushPromises();
+    expect(errors[0]?.textContent).toBe('');
+    document.querySelector('button')?.click();
+    await flushPromises();
+    expect(errors[0]?.textContent).toBe(['WRONG', 'WRONG AGAIN']);
+  });
+
   test('sets individual field dirty meta', async () => {
     mountWithHoc({
       setup() {
