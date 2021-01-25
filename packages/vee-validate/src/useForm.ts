@@ -100,28 +100,30 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
   /**
    * Manually sets an error message on a specific field
    */
-  function setFieldError(field: keyof TValues, message: string | undefined) {
+  function setFieldErrors(field: keyof TValues, messages: Array[string] | string | undefined) {
     const fieldInstance = fieldsById.value[field];
     if (!fieldInstance) {
       return;
     }
 
+    const errors = Array.isArray(messages) ? messages : (messages ? [message] : [])
+                                 
     if (Array.isArray(fieldInstance)) {
       fieldInstance.forEach(instance => {
-        instance.setValidationState({ errors: message ? [message] : [] });
+        instance.setValidationState({ errors });
       });
       return;
     }
 
-    fieldInstance.setValidationState({ errors: message ? [message] : [] });
+    fieldInstance.setValidationState({ errors });
   }
 
   /**
    * Sets errors for the fields specified in the object
    */
-  function setErrors(fields: Partial<Record<keyof TValues, string | undefined>>) {
+  function setErrors(fields: Partial<Record<keyof TValues, Array[string], string | undefined>>) {
     keysOf(fields).forEach(field => {
-      setFieldError(field, fields[field]);
+      setFieldErrors(field, fields[field]);
     });
   }
 
@@ -371,7 +373,7 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
               setDirty,
               setFieldDirty,
               setErrors,
-              setFieldError,
+              setFieldErrors,
               setTouched,
               setFieldTouched,
               setValues,
@@ -411,7 +413,7 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
     setFieldValue,
     setValues,
     setErrors,
-    setFieldError,
+    setFieldErrors,
     setFieldTouched,
     setTouched,
     setFieldDirty,
@@ -471,7 +473,7 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
     resetForm,
     handleSubmit,
     submitForm,
-    setFieldError,
+    setFieldErrors,
     setErrors,
     setFieldValue,
     setValues,
