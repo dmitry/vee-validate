@@ -100,13 +100,13 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
   /**
    * Manually sets an error message on a specific field
    */
-  function setFieldErrors(field: keyof TValues, messages: Array[string] | string | undefined) {
+  function setFieldError(field: keyof TValues, messages: Array[string] | string | undefined) {
     const fieldInstance = fieldsById.value[field];
     if (!fieldInstance) {
       return;
     }
 
-    const errors = Array.isArray(messages) ? messages : (messages ? [message] : [])
+    const errors = Array.isArray(messages) ? messages : (messages ? [messages] : [])
                                  
     if (Array.isArray(fieldInstance)) {
       fieldInstance.forEach(instance => {
@@ -123,7 +123,7 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
    */
   function setErrors(fields: Partial<Record<keyof TValues, Array[string], string | undefined>>) {
     keysOf(fields).forEach(field => {
-      setFieldErrors(field, fields[field]);
+      setFieldError(field, fields[field]);
     });
   }
 
@@ -373,7 +373,7 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
               setDirty,
               setFieldDirty,
               setErrors,
-              setFieldErrors,
+              setFieldError,
               setTouched,
               setFieldTouched,
               setValues,
@@ -413,7 +413,7 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
     setFieldValue,
     setValues,
     setErrors,
-    setFieldErrors,
+    setFieldError,
     setFieldTouched,
     setTouched,
     setFieldDirty,
@@ -473,7 +473,7 @@ export function useForm<TValues extends Record<string, any> = Record<string, any
     resetForm,
     handleSubmit,
     submitForm,
-    setFieldErrors,
+    setFieldError,
     setErrors,
     setFieldValue,
     setValues,
